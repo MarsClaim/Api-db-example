@@ -36,7 +36,7 @@ class Students(Resource):
         students= []
         for student in response:
             del student['_id']
-            student.append(student)
+            students.append(student)
         return jsonify({'results':students})
 
             
