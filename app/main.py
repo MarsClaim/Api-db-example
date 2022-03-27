@@ -22,6 +22,16 @@ class Test(Resource):
         return jsonify({"message": "You are connected"})
 
 
+class Students(Resource):
+
+    def get(self):
+            response = list(database.db.students.find())
+            students= []
+            for student in response:
+                del student['_id']
+                students.append(student)
+            return jsonify({'results':students})
+
 class Student(Resource):
 
     def get(self, id):
@@ -29,17 +39,6 @@ class Student(Resource):
         del response['_id']
         return jsonify(response)
 
-class Students(Resource):
-
-    def get(self):
-        response = list(database.db.students.find())
-        students= []
-        for student in response:
-            del student['_id']
-            students.append(student)
-        return jsonify({'results':students})
-
-            
     def post(self):
         args = post_students_args.parse_args()
         self.abort_if_id_exist(args['id'])
@@ -87,8 +86,8 @@ class Students(Resource):
             return student
 
 api.add_resource(Test, '/test/')
-api.add_resource(Students, '/students/','/students/<int:id>/')
-api.add_resource(Student,'/students/<int:id>/')
+api.add_resource(Students, '/students/')
+api.add_resource(Student,'/student/', '/student/<int:id>/')
 
 if __name__ == '__main__':
     app.run(load_dotenv=True, port=8080)
